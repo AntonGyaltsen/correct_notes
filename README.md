@@ -49,8 +49,7 @@ Dockerfile для **docker-compose**.
 
 ```bash
 curl -X POST "http://127.0.0.1:8004/notes/" \
--H "username: user1" \
--H "password: password1" \
+-H "Authorization: Basic dXNlcjE6cGFzc3dvcmQx" \
 -H "Content-Type: application/json" \
 -d '{
   "title": "Ашипка",
@@ -62,20 +61,18 @@ curl -X POST "http://127.0.0.1:8004/notes/" \
 
 ```bash
 curl -X GET "http://127.0.0.1:8004/notes/" \
--H "username: user1" \
--H "password: password1"
+-H "Authorization: Basic dXNlcjE6cGFzc3dvcmQx"
 ```
 
 ### Добавление заметки от второго пользователя
 
 ```bash
-curl -X POST "http://127.0.0.1:8004/notes/" \
--H "username: user2" \
--H "password: password2" \
+ curl -X POST "http://127.0.0.1:8004/notes/" \
+-H "Authorization: Basic dXNlcjI6cGFzc3dvcmQy" \
 -H "Content-Type: application/json" \
 -d '{
-  "title": "My First Note",
-  "content": "This is the content of my first note."
+  "title": "Ашипка",
+  "content": "Первый текст с ашипкой."
 }'
 ```
 
@@ -83,8 +80,7 @@ curl -X POST "http://127.0.0.1:8004/notes/" \
 
 ```bash
 curl -X GET "http://127.0.0.1:8004/notes/" \
--H "username: user2" \
--H "password: password2"
+-H "Authorization: Basic dXNlcjI6cGFzc3dvcmQy"
 ```
 
 ### Проверка сохраненных данных в базе данных Postgres
