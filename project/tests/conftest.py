@@ -1,11 +1,11 @@
 import os
+from base64 import b64encode
 
 import pytest
+from app.config import Settings, get_settings
+from app.main import create_application
 from starlette.testclient import TestClient
 from tortoise.contrib.fastapi import register_tortoise
-
-from app.config import get_settings, Settings
-from app.main import create_application
 
 
 def get_settings_override():
@@ -33,3 +33,21 @@ def test_app_with_db():
     )
     with TestClient(app) as test_client:
         yield test_client
+
+
+@pytest.fixture
+def auth_headers_and_payload():
+    def _auth_headers_and_payload(username, password):
+        credentials = f"{username}:{password}"
+        encoded_credentials = b64encode(credentials.encode()).decode()
+
+        headers = {
+            "Authorization": f"Basic {encoded_credentials}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {"title": "Ашипка", "content": "Первый текст с ашипкой."}
+
+        return headers, payload
+
+    return _auth_headers_and_payload
