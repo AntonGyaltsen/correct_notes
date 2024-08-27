@@ -52,12 +52,12 @@ async def get_current_user(username: str = Header(...), password: str = Header(.
 @router.post("/", response_model=NoteResponseSchema, status_code=201)
 async def create_note(payload: NotePayloadSchema, current_user: User = Depends(
     get_current_user)) -> NoteResponseSchema:
-    note_id = await crud.post(payload, current_user.username)
+    note_id, note_title, note_content = await crud.post(payload, current_user.username)
 
     response_object = {
         "id": note_id,
-        "title": payload.title,
-        "content": payload.content,
+        "title": note_title,
+        "content": note_content,
     }
     return response_object
 

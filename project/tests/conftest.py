@@ -1,11 +1,9 @@
-
 import os
 
 import pytest
 from starlette.testclient import TestClient
 from tortoise.contrib.fastapi import register_tortoise
 
-from app import main
 from app.config import get_settings, Settings
 from app.main import create_application
 
@@ -19,12 +17,11 @@ def test_app():
     app = create_application()
     app.dependency_overrides[get_settings] = get_settings_override
     with TestClient(app) as test_client:
-
         yield test_client
+
 
 @pytest.fixture(scope="module")
 def test_app_with_db():
-    # set up
     app = create_application()
     app.dependency_overrides[get_settings] = get_settings_override
     register_tortoise(
@@ -35,8 +32,4 @@ def test_app_with_db():
         add_exception_handlers=True,
     )
     with TestClient(app) as test_client:
-
-        # testing
         yield test_client
-
-    # tear down
