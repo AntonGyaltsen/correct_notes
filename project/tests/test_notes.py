@@ -84,7 +84,6 @@ def test_create_notes_invalid_json(test_app):
         ]
     }
 
-    # Test without the Authorization header
     response = test_app.post("/notes/", data=json.dumps({}))
     assert response.status_code == 401
     assert response.json() == {"detail": "Not authenticated"}
@@ -110,7 +109,6 @@ def test_create_notes_invalid_json(test_app):
 def test_read_all_notes_and_check_for_correct_user(
     test_app_with_db, username, password, payload, expected_user
 ):
-    # Encode the credentials in Base64
     credentials = f"{username}:{password}"
     encoded_credentials = b64encode(credentials.encode()).decode()
 
@@ -119,20 +117,16 @@ def test_read_all_notes_and_check_for_correct_user(
         "Content-Type": "application/json",
     }
 
-    # Create a note
     response = test_app_with_db.post(
         "/notes/", headers=headers, data=json.dumps(payload)
     )
     assert response.status_code == 201
     note_id = response.json()["id"]
 
-    # Fetch all notes for the given user
     response = test_app_with_db.get("/notes/", headers=headers)
     assert response.status_code == 200
 
     response_list = response.json()
 
-    # Check that all notes belong to the expected user
     assert all(note["user"] == expected_user for note in response_list)
-    # Check that the created note is in the list
     assert any(note["id"] == note_id for note in response_list)
